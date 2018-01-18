@@ -1,48 +1,63 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
 
-import { InFlightState } from './inflight-state';
-import { PagedResults } from '../interfaces/paged-results';
-import { Subject } from 'rxjs/Subject';
+import {InFlightState} from './inflight-state';
+import {PagedResults} from '../interfaces/paged-results';
+
+type getPageFnType = (page: number, perPage: number) => Observable<PagedResults>;
 
 export class InFlight {
-  public state: InFlightState;
-  public stateObservable: Subject<InFlightState>;
+  private _state: InFlightState;
+  public stateObservable: BehaviorSubject<InFlightState>;
 
   public errorObservable: Subject<Error>;
 
-  public results: PagedResults;
-  public resultsObservable: Subject<PagedResults>;
+  private _results: PagedResults;
+  public resultsObservable: BehaviorSubject<PagedResults>;
 
-  private _mainObsSubscription: Subscription;
   private _pageObsSubscription: Subscription;
+  private _getPageFn: getPageFnType;
+
+  private _perPage: number;
+  private _currentPage: number;
 
   constructor() {
-    this.state = new InFlightState();
-    this.stateObservable = new BehaviorSubject<InFlightState>(this.state);
-    this.resultsObservable = new Subject<PagedResults>();
+    this._state = new InFlightState();
+    this.stateObservable = new BehaviorSubject<InFlightState>(this._state);
+
+    this._results = new PagedResults();
+    this.resultsObservable = new BehaviorSubject<PagedResults>(this._results);
   }
 
-  public clear() {
-    this._clearData();
-    this._clearMainSubscription();
-    this._clearPageSubscription();
+  get results(): PagedResults {
+    return this.resultsObservable.getValue();
   }
 
-  private _clearData() {
-    this.results = new PagedResults();
-    this.resultsObservable.next(this.results);
+  get state(): InFlightState {
+    return this.stateObservable.getValue();
   }
 
-  private _clearMainSubscription() {
-    if (this._mainObsSubscription) {
-      this._mainObsSubscription.unsubscribe();
-      this._mainObsSubscription = null;
+  public start(perPage: number, clearData: boolean, getPageFn: getPageFnType) {
 
-      this.state.changeInFlight = false;
-      this.stateObservable.next(this.state);
+    if (clearData) {
+      this.clearData();
     }
+
+    this._currentPage = 0;
+    this._perPage = perPage;
+    this._getPageFn = getPageFn;
+
+    this.getNextPage();
+  }
+
+  public clearData() {
+    this._results = new PagedResults();
+    this.resultsObservable.next(this._results);
+
+    this._state.dataLoaded = false;
+    this.stateObservable.next(this._state);
   }
 
   private _clearPageSubscription() {
@@ -50,40 +65,55 @@ export class InFlight {
       this._pageObsSubscription.unsubscribe();
       this._pageObsSubscription = null;
 
-      this.state.pageInFlight = false;
-      this.stateObservable.next(this.state);
+      this._state.inFlight = false;
+      this._triggerStateChange();
     }
   }
 
-  public start(obs: Observable<PagedResults>) {
-    this.clear();
+  public getNextPage() {
 
-    this._mainObsSubscription = obs
+    this._clearPageSubscription();
+
+    const nextPage = this._currentPage + 1;
+
+    this._pageObsSubscription = this._getPageFn(nextPage, this._perPage)
       .subscribe(
         (data) => {
-          this.results = data;
-          this.resultsObservable.next(this.results);
-        },
-        (err) => {
-          this._clearMainSubscription();
-          this.errorObservable.next(err);
-        });
-  }
+          this._clearPageSubscription();
 
-  public addPage(obs: Observable<PagedResults>) {
-    this._pageObsSubscription = obs
-      .subscribe(
-        (data) => {
-          this.results.total = data.total;
-          this.results.page = data.page;
-          this.results.entities.concat(data.entities);
+          if (data.page !== nextPage) {
+            // panic, should not happen
+            // raise an error and discard the result
+            this.errorObservable.next(new Error(`Expected page no ${nextPage} instead got page no ${data.page}`));
+            return;
+          }
 
-          this.resultsObservable.next(this.results);
+          this._currentPage = data.page;
+
+          // Replace entire result if it was first page otherwise concatenante received entities
+          if (data.page === 1) {
+            this._results = data;
+          } else {
+            this._results.total = data.total;
+            this._results.page = data.page;
+            this._results.entities = this._results.entities.concat(data.entities);
+          }
+
+          this.resultsObservable.next(this._results);
+
+          this._state.dataLoaded = true;
+          this._triggerStateChange();
         },
         (err) => {
           this._clearPageSubscription();
           this.errorObservable.next(err);
         });
 
+    this._state.inFlight = true;
+    this._triggerStateChange();
+  }
+
+  private _triggerStateChange(): void {
+    this.stateObservable.next(this._state);
   }
 }
