@@ -3,6 +3,8 @@ import {InFlight} from './inflight';
 import {InFlightState} from './inflight-state';
 import {PagedResults} from '../interfaces/paged-results';
 
+import 'rxjs/add/operator/take';
+
 describe('InFlight', () => {
   beforeEach(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
@@ -16,7 +18,7 @@ describe('InFlight', () => {
     state.inFlight = false;
     state.dataLoaded = false;
 
-    inFlight.stateObservable.subscribe((st) => {
+    inFlight.stateObservable.take(1).subscribe((st) => {
       expect(inFlight.state).toEqual(state);
       expect(st).toEqual(state);
       done();
@@ -31,7 +33,7 @@ describe('InFlight', () => {
     });
 
     setTimeout(() => {
-      inFlight.stateObservable.subscribe((st) => {
+      inFlight.stateObservable.take(1).subscribe((st) => {
         expect(st.dataLoaded).toBe(false);
         expect(st.inFlight).toBe(true);
 
@@ -50,7 +52,7 @@ describe('InFlight', () => {
     });
 
     setTimeout(() => {
-      inFlight.stateObservable.subscribe((st) => {
+      inFlight.stateObservable.take(1).subscribe((st) => {
         expect(st.dataLoaded).toBe(true);
         expect(st.inFlight).toBe(false);
 
@@ -95,10 +97,10 @@ describe('InFlight', () => {
     const inFlight = new InFlight();
 
     inFlight.start(5, true, (page, perPage) => {
-      return genMockData(page, perPage, 23, 10, false);
+      return genMockData(page, perPage, 23, 100, false);
     });
 
-    inFlight.resultsObservable.subscribe((results) => {
+    const subs = inFlight.resultsObservable.subscribe((results) => {
       // Nothing to do, already first page is in flight
       if (!results.page) {
         return;
@@ -113,10 +115,11 @@ describe('InFlight', () => {
         expect(results.total).toBe(23);
         expect(results.entities.length).toBe(20);
         expect(inFlight.results.entities[19].name).toBe('Entity 20');
+
+        subs.unsubscribe();
         done();
       }
     });
-
   });
 
 });

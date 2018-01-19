@@ -52,6 +52,14 @@ export class InFlight {
     this.getNextPage();
   }
 
+  public clear(clearData: boolean) {
+    if (clearData) {
+      this.clearData();
+    }
+
+    this._clearPageSubscription();
+  }
+
   public clearData() {
     this._results = new PagedResults();
     this.resultsObservable.next(this._results);
