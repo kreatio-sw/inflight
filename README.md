@@ -1,27 +1,94 @@
-# Inflight
+# In Flight
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.3.
+While switching a list view with data with different criteria
+it becomes tricky to manage UI switch. This library facilitates the following:
 
-## Development server
+- Blocks any previous requests that were made prior to the switch so
+  that it does not show data from older request if that arrives late.
+- Works even when one of the pages are getting loaded as part of
+  infinite scroll.
+- Provides clear state information on state which cane be used
+  to provide proper indication to the user. Following flags are supported:
+  - dataLoaded - will be true when data is loaded, this flag will help in
+                 distinguishing empty data from the state when no data is
+                 loaded yet.
+  - inFlight - when data has been requested but not yet arrived.
+  - changeInProgress (Not implemented yet) - will provide additional
+                 qualification when data source/criteria is changing.
+                 This can be used to indicate the user that current data
+                 is stale or even putting a glass panel to block
+                 interaction.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Install
 
-## Code scaffolding
+Add npm package to your project.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Usage
 
-## Build
+### Basic usage
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+```typescript
+    const inFlight = new InFlight();
 
-## Running unit tests
+    // This will be passed to the function that gets actual data
+    const perPage = 25;
+    
+    // If set to true it will clear the data before issuing next
+    // request. Setting flase will cause the data to chnage when
+    // first page of new request arrives.
+    const clearData = true;
+    
+    inFlight.start(perPage, clearData, (page, perPage) => {
+      return getAllImages(page, perPage);
+    });
+    
+    inFlight.stateObservable.subscribe((state: InFlightState) => {
+      // Will yield for every state change
+    });
+    
+    // You can use state directly as a variable for binding
+    let dataInFlight = inFlight.state.inFlight;
+    let dataLoaded = inFlight.state.dataLoaded;
+    
+    inFlight.resultsObservable.subscribe((results:PagedResults) => {
+      // Will yield whenever results change
+      let totalResults = results.total;
+      let currentPage = results.page;
+      let entities = results.entities;
+    });
+    
+    // Load additional page
+    inFlight.getNextPage();
+    
+    // To switch the list entirely call start again with new criteria
+    inFlight.start(5, true, (page, perPage) => {
+      return getMyImages(page, perPage);
+    });
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Implementing the data request function
 
-## Running end-to-end tests
+It should return an `Observable` that should yield a `PagedResults`.
+Typically it will be a `get` call on one of the Angular HTTP  classes
+with potential chaining of `map` calls. The returned Observable should
+support yield only once.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Developing
 
-## Further help
+- src/app/inflight/gen-mock-data.spec.ts - part of testing framework, generates
+     test data with an optional delay
+- src/app/inflight/inflight-state.ts - structure for state
+src/app/inflight/inflight.spec.ts - test case
+src/app/inflight/inflight.ts - main code
+src/app/interfaces/paged-results.ts - structure for paged results
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Test cases have good coverage - has actually been more complex to develop than the
+actual functionality.
+
+Beware test cases take significant time to run as these need to test delays
+and errors.
+
+```
+$ ng test
+```
+
