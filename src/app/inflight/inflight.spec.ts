@@ -5,7 +5,7 @@ import {PagedResults} from '../interfaces/paged-results';
 
 import 'rxjs/add/operator/take';
 
-xdescribe('InFlight', () => {
+describe('InFlight', () => {
   beforeEach(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
   });
@@ -122,7 +122,29 @@ xdescribe('InFlight', () => {
     });
   });
 
-  xit('should handle empty data', () => {
-      expect(true).toBe(true);
+  it('should handle empty data', (done) => {
+    const inFlight = new InFlight();
+
+    inFlight.start(5, true, (page, perPage) => {
+      return genMockData(page, perPage, 0, 'Entity', 100, false);
     });
+
+    inFlight.stateObservable.take(1).subscribe((st) => {
+      expect(st.dataLoaded).toBe(false);
+      expect(st.inFlight).toBe(true);
+    });
+
+    setTimeout(() => {
+      inFlight.stateObservable.take(1).subscribe((st) => {
+        expect(st.dataLoaded).toBe(true);
+        expect(st.inFlight).toBe(false);
+
+        expect(inFlight.results.page).toBe(1);
+        expect(inFlight.results.entities.length).toBe(0);
+        expect(inFlight.results.total).toBe(0);
+
+        done();
+      });
+    }, 200);
+  });
 });
