@@ -9,23 +9,28 @@ export function genMockData(page: number, perPage: number, totalResults: number,
   return Observable.create(
     (obs: Observer<PagedResults>) => {
       const timerHandle = setTimeout(() => {
-        const entities = [];
+        if (err) {
+          obs.error(new Error('Unable to connect'));
+        } else {
+          const entities = [];
 
-        const firstEntityNo = (page - 1) * perPage + 1;
+          const firstEntityNo = (page - 1) * perPage + 1;
 
-        let i = firstEntityNo;
+          let i = firstEntityNo;
 
-        for (; i < firstEntityNo + perPage && i <= totalResults; i++) {
-          entities.push({name: `${prefix} ${ i }`});
+          for (; i < firstEntityNo + perPage && i <= totalResults; i++) {
+            entities.push({name: `${prefix} ${ i }`});
+          }
+
+          const results = new PagedResults(
+            totalResults,
+            page,
+            entities
+          );
+
+          obs.next(results);
+          obs.complete();
         }
-
-        const results = new PagedResults(
-          totalResults,
-          page,
-          entities
-        );
-
-        obs.next(results);
       }, delay);
 
       return () => {
@@ -35,13 +40,22 @@ export function genMockData(page: number, perPage: number, totalResults: number,
 }
 
 
-xdescribe('genMockData', () => {
-  let page = 1;
-  const perPage = 5;
-  const totalResults = 32;
-  let prefix = 'Entity';
-  let delay = 0;
-  let err = false;
+describe('genMockData', () => {
+  let totalResults: number;
+  let perPage: number;
+  let err: boolean;
+  let delay: number;
+  let prefix: string;
+  let page: number;
+
+  beforeEach(() => {
+    page = 1;
+    prefix = 'Entity';
+    delay = 0;
+    perPage = 5;
+    totalResults = 32;
+    err = false;
+  });
 
   it('should get first page of results', (done) => {
     prefix = 'Objects';
@@ -51,6 +65,18 @@ xdescribe('genMockData', () => {
       expect(result.total).toBe(totalResults);
       expect(result.entities.length).toBe(perPage);
       expect(result.entities[0].name).toBe(`${prefix} 1`);
+      done();
+    });
+  });
+
+  it('should generate error', (done) => {
+    prefix = 'Objects';
+    delay = 100;
+    err = true;
+
+    genMockData(page, perPage, totalResults, prefix, delay, err).subscribe((result: PagedResults) => {
+      expect(false).toBe(true);
+    }, (error) => {
       done();
     });
   });
