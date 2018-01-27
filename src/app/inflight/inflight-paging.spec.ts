@@ -41,9 +41,13 @@ describe('InFlight Pagination', () => {
 
     const inFlight = new InFlight();
 
+    expect(inFlight.state.switchInProgress).toBe(false);
+
     inFlight.start(5, true, (page, perPage) => {
       return genMockData(page, perPage, 23, 'Entity', 100);
     });
+
+    expect(inFlight.state.switchInProgress).toBe(true);
 
     const subs = inFlight.resultsObservable.subscribe((results) => {
       // Nothing to do, already first page is in flight
@@ -54,6 +58,7 @@ describe('InFlight Pagination', () => {
       // Request next page till we reach the n-th page
       if (results.page < targetPages) {
         inFlight.getNextPage();
+        expect(inFlight.state.switchInProgress).toBe(false);
       }
 
       if (results.page === targetPages) {
@@ -91,10 +96,12 @@ describe('InFlight Pagination', () => {
 
         expect(inFlight.state.inFlight).toBe(true);
         expect(inFlight.state.dataLoaded).toBe(false);
+        expect(inFlight.state.switchInProgress).toBe(true);
 
         setTimeout(() => {
           expect(inFlight.state.inFlight).toEqual(false);
           expect(inFlight.state.dataLoaded).toEqual(true);
+          expect(inFlight.state.switchInProgress).toBe(false);
 
           expect(inFlight.results.page).toBe(1);
           expect(inFlight.results.entities.length).toBe(5);

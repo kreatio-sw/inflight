@@ -18,10 +18,13 @@ describe('InFlight Errors', () => {
       return genMockData(page, perPage, 23, 'Entity', 100, () => true);
     });
 
+    expect(inFlight.state.errored).toBe(false);
+
     // Expect an error
     inFlight.errorObservable.subscribe((err) => {
       expect(inFlight.state.dataLoaded).toBe(false);
       expect(inFlight.state.inFlight).toBe(false);
+      expect(inFlight.state.errored).toBe(true);
 
       done();
     });
@@ -48,13 +51,16 @@ describe('InFlight Errors', () => {
     inFlight.errorObservable.subscribe((err) => {
       expect(inFlight.state.dataLoaded).toBe(false);
       expect(inFlight.state.inFlight).toBe(false);
+      expect(inFlight.state.errored).toBe(true);
 
       // Retry
       inFlight.getNextPage();
+      expect(inFlight.state.errored).toBe(false);
 
       setTimeout(() => {
         expect(inFlight.state.dataLoaded).toBe(true);
         expect(inFlight.state.inFlight).toBe(false);
+        expect(inFlight.state.errored).toBe(false);
 
         expect(inFlight.results.page).toBe(1);
         expect(inFlight.results.entities.length).toBe(5);

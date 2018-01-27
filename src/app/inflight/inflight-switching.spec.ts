@@ -17,6 +17,7 @@ describe('InFlight Switching', () => {
 
     expect(inFlight.state.dataLoaded).toBe(false);
     expect(inFlight.state.inFlight).toBe(false);
+    expect(inFlight.state.switchInProgress).toBe(false);
 
     inFlight.start(25, true, (page, perPage) => {
       return genMockData(page, perPage, 48, 'Entity A', 100);
@@ -24,10 +25,12 @@ describe('InFlight Switching', () => {
 
     expect(inFlight.state.dataLoaded).toBe(false);
     expect(inFlight.state.inFlight).toBe(true);
+    expect(inFlight.state.switchInProgress).toBe(true);
 
     setTimeout(() => {
       expect(inFlight.state.dataLoaded).toBe(true);
       expect(inFlight.state.inFlight).toBe(false);
+      expect(inFlight.state.switchInProgress).toBe(false);
 
       expect(inFlight.results.page).toBe(1);
       expect(inFlight.results.total).toBe(48);
@@ -40,11 +43,13 @@ describe('InFlight Switching', () => {
 
       expect(inFlight.state.dataLoaded).toBe(false);
       expect(inFlight.state.inFlight).toBe(true);
+      expect(inFlight.state.switchInProgress).toBe(true);
       expect(inFlight.results.entities.length).toBe(0);
 
       setTimeout(() => {
         expect(inFlight.state.dataLoaded).toBe(true);
         expect(inFlight.state.inFlight).toBe(false);
+        expect(inFlight.state.switchInProgress).toBe(false);
 
         expect(inFlight.results.page).toBe(1);
         expect(inFlight.results.total).toBe(10);
@@ -125,6 +130,8 @@ describe('InFlight Switching', () => {
     // To ensure that the mechanism, please set the timeout for the first request to 0 - the test should fail
     let iWasCalled = false;
 
+    expect(inFlight.state.switchInProgress).toBe(false);
+
     // Set a longer time, so that it arrives later
     inFlight.start(25, true, (page, perPage) => {
       return genMockData(page, perPage, 48, 'Entity A', 1000).do((results) => {
@@ -133,14 +140,20 @@ describe('InFlight Switching', () => {
       });
     });
 
+    expect(inFlight.state.switchInProgress).toBe(true);
+
     setTimeout(() => {
       // Switch to different request
       inFlight.start(15, false, (page, perPage) => {
         return genMockData(page, perPage, 10, 'Entity B', 100);
       });
 
+      expect(inFlight.state.switchInProgress).toBe(true);
+
       setTimeout(() => {
         expect(iWasCalled).toBe(false);
+
+        expect(inFlight.state.switchInProgress).toBe(false);
 
         done();
       }, 1500);

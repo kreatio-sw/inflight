@@ -3,9 +3,9 @@
 While switching a list view with data with different criteria
 it becomes tricky to manage UI switch. This library facilitates the following:
 
-- Blocks any previous requests that were made prior to the switch so
+- Blocks any requests that were made prior to the switch so
   that it does not show data from older request if that arrives late.
-- Works even when one of the pages are getting loaded as part of
+- Works even when one of the pages were getting loaded as part of
   infinite scroll.
 - Provides clear state information on state which cane be used
   to provide proper indication to the user. Following flags are supported:
@@ -13,11 +13,13 @@ it becomes tricky to manage UI switch. This library facilitates the following:
                  distinguishing empty data from the state when no data is
                  loaded yet.
   - inFlight - when data has been requested but not yet arrived.
-  - changeInProgress (Not implemented yet) - will provide additional
+  - switchInProgress - will provide additional
                  qualification when data source/criteria is changing.
                  This can be used to indicate the user that current data
                  is stale or even putting a glass panel to block
                  interaction.
+  - errored - set to true when an error has occurred,
+                 will be cleared when a subsequent request is made.
 
 ## Install
 
@@ -71,7 +73,7 @@ Add npm package to your project.
 It should return an `Observable` that should yield a `PagedResults`.
 Typically it will be a `get` call on one of the Angular HTTP  classes
 with potential chaining of `map` calls. The returned Observable should
-support yield only once.
+support yield only once.              
 
 ## Developing
 

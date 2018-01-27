@@ -54,6 +54,9 @@ export class InFlight {
     this._getPageFn = getPageFn;
 
     this.getNextPage();
+
+    this._state.switchInProgress = true;
+    this._triggerStateChange();
   }
 
   public clear(clearData: boolean) {
@@ -69,7 +72,7 @@ export class InFlight {
     this.resultsObservable.next(this._results);
 
     this._state.dataLoaded = false;
-    this.stateObservable.next(this._state);
+    this._triggerStateChange();
   }
 
   private _clearPageSubscription() {
@@ -85,6 +88,8 @@ export class InFlight {
   public getNextPage() {
 
     this._clearPageSubscription();
+    this._state.errored = false;
+    this._triggerStateChange();
 
     const nextPage = this._currentPage + 1;
 
@@ -102,9 +107,12 @@ export class InFlight {
 
           this._currentPage = data.page;
 
-          // Replace entire result if it was first page otherwise concatenante received entities
+          // Replace entire result if it was first page otherwise concatenate received entities
+          // reset flag switchInProgress when first page of data is arrived
           if (data.page === 1) {
             this._results = data;
+            this._state.switchInProgress = false;
+            this._triggerStateChange();
           } else {
             this._results.total = data.total;
             this._results.page = data.page;
@@ -118,6 +126,8 @@ export class InFlight {
         },
         (err) => {
           this._clearPageSubscription();
+          this._state.errored = true;
+          this._triggerStateChange();
           this.errorObservable.next(err);
         });
 
