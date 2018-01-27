@@ -40,7 +40,7 @@ export function genMockData(page: number, perPage: number, totalResults: number,
 }
 
 
-describe('genMockData', () => {
+xdescribe('genMockData', () => {
   let totalResults: number;
   let perPage: number;
   let err: boolean;

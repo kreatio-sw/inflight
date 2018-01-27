@@ -5,7 +5,7 @@ import {PagedResults} from '../interfaces/paged-results';
 
 import 'rxjs/add/operator/take';
 
-describe('InFlight', () => {
+describe('InFlight Basic', () => {
   beforeEach(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
   });
@@ -44,7 +44,7 @@ describe('InFlight', () => {
     }, 10);
   });
 
-  it('should get first page', (done) => {
+  it('should get data', (done) => {
     const inFlight = new InFlight();
 
     inFlight.start(5, true, (page, perPage) => {
@@ -62,64 +62,6 @@ describe('InFlight', () => {
         done();
       });
     }, 200);
-  });
-
-  it('should get two pages', (done) => {
-    const inFlight = new InFlight();
-
-    inFlight.start(5, true, (page, perPage) => {
-      return genMockData(page, perPage, 23, 'Entity', 100, false);
-    });
-
-    setTimeout(() => {
-      inFlight.getNextPage();
-
-      expect(inFlight.state.inFlight).toBe(true);
-      expect(inFlight.state.dataLoaded).toBe(true);
-
-      setTimeout(() => {
-        expect(inFlight.state.inFlight).toEqual(false);
-        expect(inFlight.state.dataLoaded).toEqual(true);
-
-        expect(inFlight.results.page).toBe(2);
-        expect(inFlight.results.total).toBe(23);
-        expect(inFlight.results.entities.length).toBe(10);
-        expect(inFlight.results.entities[8].name).toBe('Entity 9');
-
-        done();
-      }, 300);
-    }, 200);
-  });
-
-  it('should get n-th page', (done) => {
-    const targetPages = 4;
-
-    const inFlight = new InFlight();
-
-    inFlight.start(5, true, (page, perPage) => {
-      return genMockData(page, perPage, 23, 'Entity', 100, false);
-    });
-
-    const subs = inFlight.resultsObservable.subscribe((results) => {
-      // Nothing to do, already first page is in flight
-      if (!results.page) {
-        return;
-      }
-
-      // Request next page till we reach the n-th page
-      if (results.page < targetPages) {
-        inFlight.getNextPage();
-      }
-
-      if (results.page === targetPages) {
-        expect(results.total).toBe(23);
-        expect(results.entities.length).toBe(20);
-        expect(results.entities[19].name).toBe('Entity 20');
-
-        subs.unsubscribe();
-        done();
-      }
-    });
   });
 
   it('should handle empty data', (done) => {

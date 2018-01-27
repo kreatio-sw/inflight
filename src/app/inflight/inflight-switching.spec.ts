@@ -6,7 +6,7 @@ import {PagedResults} from '../interfaces/paged-results';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/do';
 
-describe('InFlight', () => {
+describe('InFlight Switching', () => {
   beforeEach(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
   });
@@ -120,13 +120,16 @@ describe('InFlight', () => {
   it('should cancel stale request', (done) => {
     const inFlight = new InFlight();
 
-    let dataSetGenerated = false;
+    // This test works by ensuring that a function was not called during lifetime of the test
+    // In this case because the associated Observable was unsubscribed
+    // To ensure that the mechanism, please set the timeout for the first request to 0 - the test should fail
+    let iWasCalled = false;
 
     // Set a longer time, so that it arrives later
     inFlight.start(25, true, (page, perPage) => {
       return genMockData(page, perPage, 48, 'Entity A', 1000, false).do((results) => {
         // This should not have been called
-        dataSetGenerated = true;
+        iWasCalled = true;
       });
     });
 
@@ -137,7 +140,7 @@ describe('InFlight', () => {
       });
 
       setTimeout(() => {
-        expect(dataSetGenerated).toBe(false);
+        expect(iWasCalled).toBe(false);
 
         done();
       }, 1500);

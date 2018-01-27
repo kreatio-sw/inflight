@@ -78,12 +78,13 @@ support yield only once.
 - src/app/inflight/gen-mock-data.spec.ts - part of testing framework, generates
      test data with an optional delay
 - src/app/inflight/inflight-state.ts - structure for state
-src/app/inflight/inflight.spec.ts - test case
+src/app/inflight/inflight-*.spec.ts - test cases
 src/app/inflight/inflight.ts - main code
 src/app/interfaces/paged-results.ts - structure for paged results
 
 Test cases have good coverage - has actually been more complex to develop than the
-actual functionality.
+actual functionality. Mock Data Generator has test cases of its own which
+are set to skip by default.
 
 Beware test cases take significant time to run as these need to test delays
 and errors.
