@@ -6,7 +6,9 @@ import {Subscription} from 'rxjs/Subscription';
 import {InFlightState} from './inflight-state';
 import {PagedResults} from '../interfaces/paged-results';
 
-type getPageFnType = (page: number, perPage: number) => Observable<PagedResults>;
+export interface GetPageFunc {
+  (page: number, perPage: number): Observable<PagedResults>;
+}
 
 export class InFlight {
   private _state: InFlightState;
@@ -18,7 +20,7 @@ export class InFlight {
   public resultsObservable: BehaviorSubject<PagedResults>;
 
   private _pageObsSubscription: Subscription;
-  private _getPageFn: getPageFnType;
+  private _getPageFn: GetPageFunc;
 
   private _perPage: number;
   private _currentPage: number;
@@ -41,7 +43,7 @@ export class InFlight {
     return this.stateObservable.getValue();
   }
 
-  public start(perPage: number, clearData: boolean, getPageFn: getPageFnType) {
+  public start(perPage: number, clearData: boolean, getPageFn: GetPageFunc) {
 
     if (clearData) {
       this.clearData();
