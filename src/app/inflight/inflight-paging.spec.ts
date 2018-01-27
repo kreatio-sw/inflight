@@ -13,7 +13,7 @@ describe('InFlight Pagination', () => {
     const inFlight = new InFlight();
 
     inFlight.start(5, true, (page, perPage) => {
-      return genMockData(page, perPage, 23, 'Entity', 100, false);
+      return genMockData(page, perPage, 23, 'Entity', 100);
     });
 
     setTimeout(() => {
@@ -42,7 +42,7 @@ describe('InFlight Pagination', () => {
     const inFlight = new InFlight();
 
     inFlight.start(5, true, (page, perPage) => {
-      return genMockData(page, perPage, 23, 'Entity', 100, false);
+      return genMockData(page, perPage, 23, 'Entity', 100);
     });
 
     const subs = inFlight.resultsObservable.subscribe((results) => {
@@ -78,7 +78,7 @@ describe('InFlight Pagination', () => {
       let iWasCalledNTimes = 0;
 
       inFlight.start(5, true, (page, perPage) => {
-        return genMockData(page, perPage, 23, 'Entity', 100, false).do(() => {
+        return genMockData(page, perPage, 23, 'Entity', 100).do(() => {
           iWasCalledNTimes++;
         });
       });
@@ -121,7 +121,7 @@ describe('InFlight Pagination', () => {
       let iWasCalledNTimes = 0;
 
       inFlight.start(5, true, (page, perPage) => {
-        return genMockData(page, perPage, 23, 'Entity', 100, false).do(() => {
+        return genMockData(page, perPage, 23, 'Entity', 100).do(() => {
           iWasCalledNTimes++;
         });
       });

@@ -29,7 +29,7 @@ describe('InFlight Basic', () => {
     const inFlight = new InFlight();
 
     inFlight.start(5, true, (page, perPage) => {
-      return genMockData(page, perPage, 23, 'Entity', 1000, false);
+      return genMockData(page, perPage, 23, 'Entity', 1000);
     });
 
     setTimeout(() => {
@@ -48,7 +48,7 @@ describe('InFlight Basic', () => {
     const inFlight = new InFlight();
 
     inFlight.start(5, true, (page, perPage) => {
-      return genMockData(page, perPage, 23, 'Entity', 100, false);
+      return genMockData(page, perPage, 23, 'Entity', 100);
     });
 
     setTimeout(() => {
@@ -68,7 +68,7 @@ describe('InFlight Basic', () => {
     const inFlight = new InFlight();
 
     inFlight.start(5, true, (page, perPage) => {
-      return genMockData(page, perPage, 0, 'Entity', 100, false);
+      return genMockData(page, perPage, 0, 'Entity', 100);
     });
 
     inFlight.stateObservable.take(1).subscribe((st) => {

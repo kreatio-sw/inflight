@@ -29,6 +29,8 @@ export class InFlight {
 
     this._results = new PagedResults();
     this.resultsObservable = new BehaviorSubject<PagedResults>(this._results);
+
+    this.errorObservable = new Subject<Error>();
   }
 
   get results(): PagedResults {

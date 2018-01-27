@@ -5,11 +5,12 @@ import {Observer} from 'rxjs/Observer';
 
 
 export function genMockData(page: number, perPage: number, totalResults: number,
-                            prefix: string, delay: number, err: boolean): Observable<PagedResults> {
+                            prefix: string, delay: number,
+                            err_fn = () => false): Observable<PagedResults> {
   return Observable.create(
     (obs: Observer<PagedResults>) => {
       const timerHandle = setTimeout(() => {
-        if (err) {
+        if (err_fn()) {
           obs.error(new Error('Unable to connect'));
         } else {
           const entities = [];
@@ -60,7 +61,7 @@ xdescribe('genMockData', () => {
   it('should get first page of results', (done) => {
     prefix = 'Objects';
 
-    genMockData(page, perPage, totalResults, prefix, delay, err).subscribe((result: PagedResults) => {
+    genMockData(page, perPage, totalResults, prefix, delay).subscribe((result: PagedResults) => {
       expect(result.page).toBe(page);
       expect(result.total).toBe(totalResults);
       expect(result.entities.length).toBe(perPage);
@@ -74,7 +75,7 @@ xdescribe('genMockData', () => {
     delay = 100;
     err = true;
 
-    genMockData(page, perPage, totalResults, prefix, delay, err).subscribe((result: PagedResults) => {
+    genMockData(page, perPage, totalResults, prefix, delay, () => true).subscribe((result: PagedResults) => {
       expect(false).toBe(true);
     }, (error) => {
       done();
@@ -84,7 +85,7 @@ xdescribe('genMockData', () => {
   it('should get fifth page of results', (done) => {
     page = 5;
 
-    genMockData(page, perPage, totalResults, prefix, delay, err).subscribe((result: PagedResults) => {
+    genMockData(page, perPage, totalResults, prefix, delay).subscribe((result: PagedResults) => {
       expect(result.page).toBe(page);
       expect(result.total).toBe(totalResults);
       expect(result.entities.length).toBe(perPage);
@@ -96,7 +97,7 @@ xdescribe('genMockData', () => {
   it('should get last page of results', (done) => {
     page = 7;
 
-    genMockData(page, perPage, totalResults, prefix, delay, err).subscribe((result: PagedResults) => {
+    genMockData(page, perPage, totalResults, prefix, delay).subscribe((result: PagedResults) => {
       expect(result.page).toBe(page);
       expect(result.total).toBe(totalResults);
       expect(result.entities.length).toBe(2);
@@ -109,7 +110,7 @@ xdescribe('genMockData', () => {
   it('should return empty page of results beyond totalResults', (done) => {
     page = 8;
 
-    genMockData(page, perPage, totalResults, prefix, delay, err).subscribe((result: PagedResults) => {
+    genMockData(page, perPage, totalResults, prefix, delay).subscribe((result: PagedResults) => {
       expect(result.page).toBe(page);
       expect(result.total).toBe(totalResults);
       expect(result.entities.length).toBe(0);
@@ -123,7 +124,7 @@ xdescribe('genMockData', () => {
 
     const start = new Date().getTime();
 
-    genMockData(page, perPage, totalResults, prefix, delay, err).subscribe((result: PagedResults) => {
+    genMockData(page, perPage, totalResults, prefix, delay).subscribe((result: PagedResults) => {
       expect(result.page).toBe(page);
       expect(result.total).toBe(totalResults);
       expect(result.entities.length).toBe(perPage);
@@ -137,7 +138,7 @@ xdescribe('genMockData', () => {
     page = 4;
     delay = 1500;
 
-    const subs = genMockData(page, perPage, totalResults, prefix, delay, err).subscribe((result: PagedResults) => {
+    const subs = genMockData(page, perPage, totalResults, prefix, delay).subscribe((result: PagedResults) => {
       // It should not be called
       expect(false).toBe(true);
     });

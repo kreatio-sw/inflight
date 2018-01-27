@@ -19,7 +19,7 @@ describe('InFlight Switching', () => {
     expect(inFlight.state.inFlight).toBe(false);
 
     inFlight.start(25, true, (page, perPage) => {
-      return genMockData(page, perPage, 48, 'Entity A', 100, false);
+      return genMockData(page, perPage, 48, 'Entity A', 100);
     });
 
     expect(inFlight.state.dataLoaded).toBe(false);
@@ -35,7 +35,7 @@ describe('InFlight Switching', () => {
       expect(inFlight.results.entities[0].name).toEqual('Entity A 1');
 
       inFlight.start(15, true, (page, perPage) => {
-        return genMockData(page, perPage, 10, 'Entity B', 100, false);
+        return genMockData(page, perPage, 10, 'Entity B', 100);
       });
 
       expect(inFlight.state.dataLoaded).toBe(false);
@@ -61,14 +61,14 @@ describe('InFlight Switching', () => {
     const inFlight = new InFlight();
 
     inFlight.start(25, true, (page, perPage) => {
-      return genMockData(page, perPage, 48, 'Entity A', 100, false);
+      return genMockData(page, perPage, 48, 'Entity A', 100);
     });
 
     setTimeout(() => {
       const prevResults = inFlight.results;
 
       inFlight.start(15, false, (page, perPage) => {
-        return genMockData(page, perPage, 10, 'Entity B', 100, false);
+        return genMockData(page, perPage, 10, 'Entity B', 100);
       });
 
       expect(inFlight.state.dataLoaded).toBe(true);
@@ -96,13 +96,13 @@ describe('InFlight Switching', () => {
 
     // Set a longer time, so that it arrives later
     inFlight.start(25, true, (page, perPage) => {
-      return genMockData(page, perPage, 48, 'Entity A', 1000, false);
+      return genMockData(page, perPage, 48, 'Entity A', 1000);
     });
 
     setTimeout(() => {
       // Switch to different request
       inFlight.start(15, false, (page, perPage) => {
-        return genMockData(page, perPage, 10, 'Entity B', 100, false);
+        return genMockData(page, perPage, 10, 'Entity B', 100);
       });
 
       setTimeout(() => {
@@ -127,7 +127,7 @@ describe('InFlight Switching', () => {
 
     // Set a longer time, so that it arrives later
     inFlight.start(25, true, (page, perPage) => {
-      return genMockData(page, perPage, 48, 'Entity A', 1000, false).do((results) => {
+      return genMockData(page, perPage, 48, 'Entity A', 1000).do((results) => {
         // This should not have been called
         iWasCalled = true;
       });
@@ -136,7 +136,7 @@ describe('InFlight Switching', () => {
     setTimeout(() => {
       // Switch to different request
       inFlight.start(15, false, (page, perPage) => {
-        return genMockData(page, perPage, 10, 'Entity B', 100, false);
+        return genMockData(page, perPage, 10, 'Entity B', 100);
       });
 
       setTimeout(() => {
