@@ -1,22 +1,36 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 
 import {InFlightState} from './inflight-state';
 import {PagedResults} from '../interfaces/paged-results';
+import {GetPageFunc} from './get-page-func';
 
-export interface GetPageFunc {
-  (page: number, perPage: number): Observable<PagedResults>;
-}
-
+/**
+ * Class to manage UI state changes within a component
+ *
+ * @description see README for details
+ */
 export class InFlight {
   private _state: InFlightState;
+
+  /**
+   * Will yield for each state change
+   */
   public stateObservable: BehaviorSubject<InFlightState>;
 
+  /**
+   * Will yield all errors.
+   *
+   * In case of errors `errored` flag will be set in `state` as well.
+   */
   public errorObservable: Subject<Error>;
 
   private _results: PagedResults;
+
+  /**
+   * Will yield whenever results change, i.e., new data arrives or data is cleared.
+   */
   public resultsObservable: BehaviorSubject<PagedResults>;
 
   private _pageObsSubscription: Subscription;
@@ -25,6 +39,9 @@ export class InFlight {
   private _perPage: number;
   private _currentPage: number;
 
+  /**
+   * Create a new instance. You should create one for each component.
+   */
   constructor() {
     this._state = new InFlightState();
     this.stateObservable = new BehaviorSubject<InFlightState>(this._state);
@@ -35,14 +52,40 @@ export class InFlight {
     this.errorObservable = new Subject<Error>();
   }
 
+  /**
+   * Current value of results, it same as yielded by [resultsObservable]{@link InFlight#resultsObservable}
+   *
+   * @returns {PagedResults}
+   */
   get results(): PagedResults {
     return this.resultsObservable.getValue();
   }
 
+  /**
+   * Current state, it same as yielded by [stateObservable]{@link InFlight#stateObservable}
+   *
+   * @returns {InFlightState}
+   */
   get state(): InFlightState {
     return this.stateObservable.getValue();
   }
 
+  /**
+   * Initiate a switch. Call this to change the criteria that builds the list.
+   *
+   * `getPageFn` function will receive `pageNumber` and `perPage`.
+   * It needs to return an `Observable` that will yield {@link PagedResults}.
+   * This will typically be Angular HTTP `get` call, followed by `map`.
+   * To add timeout and retry, use standard RxJS techniques at this stage.
+   *
+   * If requests are in flight when a switch is initiated, the pending request will be cancelled.
+   * It is ensured that stale data will not show up.
+   *
+   * @param {number} perPage Number of entities per page
+   * @param {boolean} clearData Whether to clear the results now,
+   * if `false` current set of results will be retained till response is received
+   * @param {GetPageFunc} getPageFn See description for details
+   */
   public start(perPage: number, clearData: boolean, getPageFn: GetPageFunc) {
 
     if (clearData) {
@@ -59,6 +102,13 @@ export class InFlight {
     this._triggerStateChange();
   }
 
+  /**
+   * Clear ongoing requests if any.
+   *
+   * This should be called as part of destructon process. For example onDestroy of a component.
+   *
+   * @param {boolean} clearData Whether to clear `results` as well.
+   */
   public clear(clearData: boolean) {
     if (clearData) {
       this.clearData();
@@ -67,6 +117,9 @@ export class InFlight {
     this._clearPageSubscription();
   }
 
+  /**
+   * Clear results.
+   */
   public clearData() {
     this._results = new PagedResults();
     this.resultsObservable.next(this._results);
@@ -85,6 +138,12 @@ export class InFlight {
     }
   }
 
+  /**
+   * Request next page of data.
+   *
+   * If it is first page, it will replace results.
+   * If results are still in flight when this is called, the previous one will be canceled.
+   */
   public getNextPage() {
 
     this._clearPageSubscription();
