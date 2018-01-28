@@ -62,6 +62,24 @@ export class InFlight {
   }
 
   /**
+   * Directly update results
+   *
+   * When set, `resultsObservable` will yield the new results.
+   * Sometimes the entities displayed in the UI may receive insert/updates/deletes
+   * because of user actions. Occasionally there may be other notification mechanisms
+   * that communicate these changes.
+   *
+   * You must understand that the results may get inconsistent when the loaded entities
+   * are updated using this call and subsequent pages are loaded from external service.
+   *
+   * @param {PagedResults} value
+   */
+  set results(value: PagedResults) {
+    this._results = value;
+    this._triggerResultsChange();
+  }
+
+  /**
    * Current state, it same as yielded by [stateObservable]{@link InFlight#stateObservable}
    *
    * @returns {InFlightState}
@@ -122,7 +140,7 @@ export class InFlight {
    */
   public clearData() {
     this._results = new PagedResults();
-    this.resultsObservable.next(this._results);
+    this._triggerResultsChange();
 
     this._state.dataLoaded = false;
     this._triggerStateChange();
@@ -147,6 +165,7 @@ export class InFlight {
   public getNextPage() {
 
     this._clearPageSubscription();
+
     this._state.errored = false;
     this._triggerStateChange();
 
@@ -178,7 +197,7 @@ export class InFlight {
             this._results.entities = this._results.entities.concat(data.entities);
           }
 
-          this.resultsObservable.next(this._results);
+          this._triggerResultsChange();
 
           this._state.dataLoaded = true;
           this._triggerStateChange();
@@ -192,6 +211,10 @@ export class InFlight {
 
     this._state.inFlight = true;
     this._triggerStateChange();
+  }
+
+  private _triggerResultsChange() {
+    this.resultsObservable.next(this._results);
   }
 
   private _triggerStateChange(): void {
