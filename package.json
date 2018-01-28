@@ -1,14 +1,15 @@
 {
-  "name": "inflight",
-  "version": "0.1.0",
-  "license": "Proprietary",
+  "name": "@kreatio/inflight",
+  "version": "0.1.1",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "test": "ng test",
     "dist": "ng-packagr -p ng-package.json",
+    "doc": "bin/doc-gen.sh",
     "lint": "ng lint"
   },
-  "private": true,
+  "private": false,
   "dependencies": {},
   "devDependencies": {
     "@angular/animations": "^5.0.0",
