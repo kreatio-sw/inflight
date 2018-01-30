@@ -378,7 +378,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="112" class="link-to-prism">src/app/inflight/inflight.ts:112</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">src/app/inflight/inflight.ts:130</a></div>
                                         </td>
                                     </tr>
             
@@ -450,7 +450,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="123" class="link-to-prism">src/app/inflight/inflight.ts:123</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="141" class="link-to-prism">src/app/inflight/inflight.ts:141</a></div>
                                         </td>
                                     </tr>
             
@@ -491,7 +491,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="147" class="link-to-prism">src/app/inflight/inflight.ts:147</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="165" class="link-to-prism">src/app/inflight/inflight.ts:165</a></div>
                                         </td>
                                     </tr>
             
@@ -534,7 +534,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">src/app/inflight/inflight.ts:89</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="107" class="link-to-prism">src/app/inflight/inflight.ts:107</a></div>
                                         </td>
                                     </tr>
             
@@ -779,6 +779,58 @@
                                     </td>
                                 </tr>
             
+                            <tr>
+                                <td class="col-md-4">
+                                    <span class="accessor"><b>set</b><code>results(value: )</code></span>
+                                </td>
+                            </tr>
+                                        <tr>
+                                            <td class="col-md-4">
+                                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/inflight/inflight.ts:77</a></div>
+                                            </td>
+                                        </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                            <div class="io-description"><p>Directly update results</p>
+            <p>When set, <code>resultsObservable</code> will yield the new results.
+            Sometimes the entities displayed in the UI may receive insert/updates/deletes
+            because of user actions. Occasionally there may be other notification mechanisms
+            that communicate these changes.</p>
+            <p>You must understand that the results may get inconsistent when the loaded entities
+            are updated using this call and subsequent pages are loaded from external service.</p>
+            </div>
+            
+                                            <div class="io-description">
+                                                    <b>Parameters :</b>
+                                                    <table class="params">
+                                                        <thead>
+                                                            <tr>
+                                                                <td>Name</td>
+                                                                <td>Type</td>
+                                                                <td>Optional</td>
+                                                                <td>Description</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                                <tr>
+                                                                  <td>value</td>
+                                                                  <td>
+                                                                  </td>
+                                                                  <td>
+                                                                  </td>
+                                                                  <td></td>
+                                                                </tr>
+                                                        </tbody>
+                                                    </table>
+                                            </div>
+                                            <div>
+                                            </div>
+                                            <div class="io-description">
+                                                <b>Returns : </b>    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+            
+                                            </div>
+                                    </td>
+                                </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -797,7 +849,7 @@
                             </tr>
                                         <tr>
                                             <td class="col-md-4">
-                                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/app/inflight/inflight.ts:69</a></div>
+                                                <div class="io-line">Defined in <a href="" data-line="87" class="link-to-prism">src/app/inflight/inflight.ts:87</a></div>
                                             </td>
                                         </tr>
                                 <tr>
@@ -885,6 +937,24 @@ export class InFlight {
   }
 
   /**
+   * Directly update results
+   *
+   * When set, &#x60;resultsObservable&#x60; will yield the new results.
+   * Sometimes the entities displayed in the UI may receive insert/updates/deletes
+   * because of user actions. Occasionally there may be other notification mechanisms
+   * that communicate these changes.
+   *
+   * You must understand that the results may get inconsistent when the loaded entities
+   * are updated using this call and subsequent pages are loaded from external service.
+   *
+   * @param {PagedResults} value
+   */
+  set results(value: PagedResults) {
+    this._results &#x3D; value;
+    this._triggerResultsChange();
+  }
+
+  /**
    * Current state, it same as yielded by [stateObservable]{@link InFlight#stateObservable}
    *
    * @returns {InFlightState}
@@ -945,7 +1015,7 @@ export class InFlight {
    */
   public clearData() {
     this._results &#x3D; new PagedResults();
-    this.resultsObservable.next(this._results);
+    this._triggerResultsChange();
 
     this._state.dataLoaded &#x3D; false;
     this._triggerStateChange();
@@ -970,6 +1040,7 @@ export class InFlight {
   public getNextPage() {
 
     this._clearPageSubscription();
+
     this._state.errored &#x3D; false;
     this._triggerStateChange();
 
@@ -1001,7 +1072,7 @@ export class InFlight {
             this._results.entities &#x3D; this._results.entities.concat(data.entities);
           }
 
-          this.resultsObservable.next(this._results);
+          this._triggerResultsChange();
 
           this._state.dataLoaded &#x3D; true;
           this._triggerStateChange();
@@ -1015,6 +1086,10 @@ export class InFlight {
 
     this._state.inFlight &#x3D; true;
     this._triggerStateChange();
+  }
+
+  private _triggerResultsChange() {
+    this.resultsObservable.next(this._results);
   }
 
   private _triggerStateChange(): void {

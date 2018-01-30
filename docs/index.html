@@ -207,32 +207,119 @@
                    <div class="content-data">
 
 <h1 id="in-flight">In Flight</h1>
-<p>While switching a list view with data with different criteria
-it becomes tricky to manage UI switch. This library facilitates the following:</p>
+<p><em>Please read this documentation at <a href="https://kreatio-sw.github.io/inflight/">https://kreatio-sw.github.io/inflight/</a></em></p>
+<h2 id="motivation">Motivation</h2>
+<p>Single Page Applications (SPA) pose unique issues which conventional applications did not face.
+In an SPA, quite often the following situation is faced:</p>
 <ul>
-<li>Blocks any requests that were made prior to the switch so
-that it does not show data from older request if that arrives late.</li>
-<li>Works even when one of the pages were getting loaded as part of
-infinite scroll.</li>
-<li>Provides clear state information on state which cane be used
-to provide proper indication to the user. Following flags are supported:<ul>
-<li><code>dataLoaded</code> - will be set when data is loaded, this flag will help in
+<li>There is a list of entities to be displayed.</li>
+<li>There are several links that will impact the selection criteria.</li>
+<li>There may be a search box that will further impact the selection criteria.</li>
+</ul>
+<p>A pragmatic approach can be as follows: </p>
+<ul>
+<li>When switching selection criteria, the previous query, which may still be
+in flight, needs to be canceled.</li>
+<li>Even the it could not be canceled it needs to be ensured that stale data
+does not show up in the UI (may happen if not implemented correctly).</li>
+<li><p>Regarding entries already displayed, while switching there may be several scenarios:</p>
+<ul>
+<li>clear the current entries as soon a switch is requested.</li>
+<li>do not clear, but prevent users from interacting with these.</li>
+<li>do not clear, let users interact as well.</li>
+<li>indicate users that a switch is in progress.</li>
+</ul>
+</li>
+<li><p>Needs to simplify loading subsequent pages:</p>
+<ul>
+<li>should indicate when a page is getting loaded.</li>
+<li>should manage a switch even when a page is getting loaded.</li>
+<li>must load pages in order.</li>
+<li>should not load the same page twice.</li>
+</ul>
+</li>
+<li><p>Ideally distinguish when no data has arrived from no entities matched the criteria.</p>
+</li>
+<li><p>Allows updating entities locally:</p>
+<ul>
+<li>updating some attributes.</li>
+<li>adding new entities.</li>
+<li>deleting entities.</li>
+</ul>
+</li>
+</ul>
+<p>Well, this library targets to simplify the above in simple and consistent ways.</p>
+<h2 id="supported-state-flags">Supported State Flags</h2>
+<p>See <a href="classes/InFlightState.html">InFlightState</a> for more details:</p>
+<ul>
+<li><a href="classes/InFlightState.html#dataLoaded">dataLoaded</a> - will be set 
+when data is loaded, this flag will help in
 distinguishing empty data from the state when no data is
 loaded yet.</li>
-<li><code>inFlight</code> - when data has been requested but not yet arrived.</li>
-<li><code>switchInProgress</code> - will provide additional
+<li><a href="classes/InFlightState.html#inFlight">inFlight</a> - when data 
+has been requested but not yet arrived.</li>
+<li><a href="classes/InFlightState.html#switchInProgress">switchInProgress</a> - will
+provide additional
 qualification when data source/criteria is changing.
 This can be used to indicate the user that current data
 is stale or even putting a glass panel to block
 interaction.</li>
-<li><code>errored</code> - set to true when an error has occurred,
+<li><a href="classes/InFlightState.html#errored">errored</a> - set to true when an error has occurred,
 will be cleared when a subsequent request is made.</li>
+</ul>
+<h2 id="considerations-for-local-updates">Considerations for local updates</h2>
+<p><em>These issues are not specific to this library and not solved by
+this library.</em></p>
+<p>Local updates when combined with pagination can get quite tricky.</p>
+<p>Consider the cases when not all entities are loaded in the UI yet.</p>
+<ul>
+<li><p>Inserts:</p>
+<ul>
+<li><p>Where to place the newly created entries</p>
+<ul>
+<li>beginning</li>
+<li>end</li>
+<li>in the correct sort order (may not be possible as all
+matching entities are not loaded yet)</li>
+</ul>
+</li>
+<li><p>what to do if newly created entity does not match the current
+selection criteria</p>
+</li>
+<li><p>what to do if the newly added entities shows up on a subsequently added page</p>
+</li>
+</ul>
+</li>
+<li><p>Update:</p>
+<ul>
+<li>what if the update changes the position of the entity as per the sort order</li>
+<li>what if the entity no longer matches the selection criteria</li>
+</ul>
+</li>
+<li><p>Delete:</p>
+<ul>
+<li>will the pagination still work (i.e. subsequent pages will load correctly)</li>
+<li>what if the entities get reloaded even before the delete got carried out in
+the data store.</li>
 </ul>
 </li>
 </ul>
 <h2 id="install">Install</h2>
-<p>Add npm package to your project.</p>
+<p>Add npm package to your Angular4/Angular5 project:</p>
+<pre class="line-numbers"><code class="language-bash">$ npm -i &#64;kreatio/inflight
+
+# or
+
+$ yarn add &#64;kreatio/inflight</code></pre><p>All classes are plain typescript classes, so you need not mention or provide any of these
+in your project.</p>
 <h2 id="usage">Usage</h2>
+<p>See the following for API details:</p>
+<ul>
+<li><a href="classes/InFlight.html">InFlight</a> - main utility class</li>
+<li><a href="classes/InFlightState.html">InFlightState</a></li>
+<li><a href="classes/PagedResults.html">PagedResults</a></li>
+<li><a href="interfaces/GetPageFunc.html">GetPageFunc</a> - function template to fetch actual data</li>
+</ul>
 <h3 id="basic-usage">Basic usage</h3>
 <pre class="line-numbers"><code class="language-typescript">    const inFlight = new InFlight();
 
@@ -273,7 +360,7 @@ will be cleared when a subsequent request is made.</li>
 <p>It should return an <code>Observable</code> that should yield a <code>PagedResults</code>.
 Typically it will be a <code>get</code> call on one of the Angular HTTP  classes
 with potential chaining of <code>map</code> calls. The returned Observable should
-support yield only once.              </p>
+yield only once.              </p>
 <h2 id="developing">Developing</h2>
 <ul>
 <li>src/app/inflight/gen-mock-data.spec.ts - part of testing framework, generates

@@ -1,31 +1,122 @@
 # In Flight
 
-While switching a list view with data with different criteria
-it becomes tricky to manage UI switch. This library facilitates the following:
+*Please read this documentation at https://kreatio-sw.github.io/inflight/*
 
-- Blocks any requests that were made prior to the switch so
-  that it does not show data from older request if that arrives late.
-- Works even when one of the pages were getting loaded as part of
-  infinite scroll.
-- Provides clear state information on state which cane be used
-  to provide proper indication to the user. Following flags are supported:
-  - `dataLoaded` - will be set when data is loaded, this flag will help in
-   distinguishing empty data from the state when no data is
-   loaded yet.
-  - `inFlight` - when data has been requested but not yet arrived.
-  - `switchInProgress` - will provide additional
-   qualification when data source/criteria is changing.
-   This can be used to indicate the user that current data
-   is stale or even putting a glass panel to block
-   interaction.
-  - `errored` - set to true when an error has occurred,
-   will be cleared when a subsequent request is made.
+## Motivation
+
+Single Page Applications (SPA) pose unique issues which conventional applications did not face.
+In an SPA, quite often the following situation is faced:
+
+- There is a list of entities to be displayed.
+- There are several links that will impact the selection criteria.
+- There may be a search box that will further impact the selection criteria.
+
+A pragmatic approach can be as follows: 
+
+- When switching selection criteria, the previous query, which may still be
+  in flight, needs to be canceled.
+- Even the it could not be canceled it needs to be ensured that stale data
+  does not show up in the UI (may happen if not implemented correctly).
+- Regarding entries already displayed, while switching there may be several scenarios:
+
+    - clear the current entries as soon a switch is requested.
+    - do not clear, but prevent users from interacting with these.
+    - do not clear, let users interact as well.
+    - indicate users that a switch is in progress.
+
+- Needs to simplify loading subsequent pages:
+
+    - should indicate when a page is getting loaded.
+    - should manage a switch even when a page is getting loaded.
+    - must load pages in order.
+    - should not load the same page twice.
+
+- Ideally distinguish when no data has arrived from no entities matched the criteria.
+
+- Allows updating entities locally:
+
+    - updating some attributes.
+    - adding new entities.
+    - deleting entities.
+
+Well, this library targets to simplify the above in simple and consistent ways.
+
+## Supported State Flags
+
+See [InFlightState](classes/InFlightState.html) for more details:
+
+- [dataLoaded](classes/InFlightState.html#dataLoaded) - will be set 
+ when data is loaded, this flag will help in
+ distinguishing empty data from the state when no data is
+ loaded yet.
+- [inFlight](classes/InFlightState.html#inFlight) - when data 
+ has been requested but not yet arrived.
+- [switchInProgress](classes/InFlightState.html#switchInProgress) - will
+ provide additional
+ qualification when data source/criteria is changing.
+ This can be used to indicate the user that current data
+ is stale or even putting a glass panel to block
+ interaction.
+- [errored](classes/InFlightState.html#errored) - set to true when an error has occurred,
+ will be cleared when a subsequent request is made.
+
+## Considerations for local updates
+
+*These issues are not specific to this library and not solved by
+this library.*
+
+Local updates when combined with pagination can get quite tricky.
+
+
+Consider the cases when not all entities are loaded in the UI yet.
+
+- Inserts:
+
+    - Where to place the newly created entries
+        - beginning
+        - end
+        - in the correct sort order (may not be possible as all
+          matching entities are not loaded yet)
+            
+    - what to do if newly created entity does not match the current
+      selection criteria
+    
+    - what to do if the newly added entities shows up on a subsequently added page
+
+- Update:
+
+    - what if the update changes the position of the entity as per the sort order
+    - what if the entity no longer matches the selection criteria
+
+- Delete:
+
+    - will the pagination still work (i.e. subsequent pages will load correctly)
+    - what if the entities get reloaded even before the delete got carried out in
+      the data store.
 
 ## Install
 
-Add npm package to your project.
+Add npm package to your Angular4/Angular5 project:
+
+```bash
+$ npm -i @kreatio/inflight
+
+# or
+
+$ yarn add @kreatio/inflight
+```
+
+All classes are plain typescript classes, so you need not mention or provide any of these
+in your project.
 
 ## Usage
+
+See the following for API details:
+
+- [InFlight](classes/InFlight.html) - main utility class
+- [InFlightState](classes/InFlightState.html)
+- [PagedResults](classes/PagedResults.html)
+- [GetPageFunc](interfaces/GetPageFunc.html) - function template to fetch actual data
 
 ### Basic usage
 
@@ -73,7 +164,7 @@ Add npm package to your project.
 It should return an `Observable` that should yield a `PagedResults`.
 Typically it will be a `get` call on one of the Angular HTTP  classes
 with potential chaining of `map` calls. The returned Observable should
-support yield only once.              
+yield only once.              
 
 ## Developing
 
