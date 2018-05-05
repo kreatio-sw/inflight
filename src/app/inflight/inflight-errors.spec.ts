@@ -19,12 +19,14 @@ describe('InFlight Errors', () => {
     });
 
     expect(inFlight.state.errored).toBe(false);
+    expect(inFlight.state.hasMorePages).toBe(true);
 
     // Expect an error
     inFlight.errorObservable.subscribe((err) => {
       expect(inFlight.state.dataLoaded).toBe(false);
       expect(inFlight.state.inFlight).toBe(false);
       expect(inFlight.state.errored).toBe(true);
+      expect(inFlight.state.hasMorePages).toBe(true);
 
       done();
     });

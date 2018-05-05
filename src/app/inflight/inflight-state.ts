@@ -35,4 +35,9 @@ export class InFlightState {
    * @type {boolean}
    */
   switchInProgress = false;
+
+  /**
+   * Will be set if there are more pages expected
+   */
+  hasMorePages = false;
 }

@@ -26,11 +26,13 @@ describe('InFlight Switching', () => {
     expect(inFlight.state.dataLoaded).toBe(false);
     expect(inFlight.state.inFlight).toBe(true);
     expect(inFlight.state.switchInProgress).toBe(true);
+    expect(inFlight.state.hasMorePages).toBe(true);
 
     setTimeout(() => {
       expect(inFlight.state.dataLoaded).toBe(true);
       expect(inFlight.state.inFlight).toBe(false);
       expect(inFlight.state.switchInProgress).toBe(false);
+      expect(inFlight.state.hasMorePages).toBe(true);
 
       expect(inFlight.results.page).toBe(1);
       expect(inFlight.results.total).toBe(48);
@@ -45,11 +47,13 @@ describe('InFlight Switching', () => {
       expect(inFlight.state.inFlight).toBe(true);
       expect(inFlight.state.switchInProgress).toBe(true);
       expect(inFlight.results.entities.length).toBe(0);
+      expect(inFlight.state.hasMorePages).toBe(true);
 
       setTimeout(() => {
         expect(inFlight.state.dataLoaded).toBe(true);
         expect(inFlight.state.inFlight).toBe(false);
         expect(inFlight.state.switchInProgress).toBe(false);
+        expect(inFlight.state.hasMorePages).toBe(false);
 
         expect(inFlight.results.page).toBe(1);
         expect(inFlight.results.total).toBe(10);
