@@ -48,6 +48,18 @@
                                 <li class="link">
                                   <a href="../index.html" ><span class="fa fa-file-text-o"></span>README</a>
                                 </li>
+                                <li class="link">
+                                        <a href="../changelog.html"
+                                    >
+                                        <span class="fa fa-file-text-o"></span>CHANGELOG
+                                    </a>
+                                </li>
+                                <li class="link">
+                                        <a href="../license.html"
+                                    >
+                                        <span class="fa fa-file-text-o"></span>LICENSE
+                                    </a>
+                                </li>
                         </ul>
                     </li>
             
@@ -141,6 +153,18 @@
                                        </li>
                                        <li class="link">
                                          <a href="../index.html" ><span class="fa fa-file-text-o"></span>README</a>
+                                       </li>
+                                       <li class="link">
+                                               <a href="../changelog.html"
+                                           >
+                                               <span class="fa fa-file-text-o"></span>CHANGELOG
+                                           </a>
+                                       </li>
+                                       <li class="link">
+                                               <a href="../license.html"
+                                           >
+                                               <span class="fa fa-file-text-o"></span>LICENSE
+                                           </a>
                                        </li>
                                </ul>
                            </li>
@@ -378,14 +402,14 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">src/app/inflight/inflight.ts:130</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">src/app/inflight/inflight.ts:132</a></div>
                                         </td>
                                     </tr>
             
                             <tr>
                                 <td class="col-md-4">
                                         <div class="io-description"><p>Clear ongoing requests if any.</p>
-            <p>This should be called as part of destructon process. For example onDestroy of a component.</p>
+            <p>This should be called as part of destruction process. For example onDestroy of a component.</p>
             </div>
             
                                         <div class="io-description">
@@ -450,7 +474,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="141" class="link-to-prism">src/app/inflight/inflight.ts:141</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="146" class="link-to-prism">src/app/inflight/inflight.ts:146</a></div>
                                         </td>
                                     </tr>
             
@@ -491,7 +515,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="165" class="link-to-prism">src/app/inflight/inflight.ts:165</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="170" class="link-to-prism">src/app/inflight/inflight.ts:170</a></div>
                                         </td>
                                     </tr>
             
@@ -989,6 +1013,8 @@ export class InFlight {
     this._perPage &#x3D; perPage;
     this._getPageFn &#x3D; getPageFn;
 
+    this._state.hasMorePages &#x3D; true;
+
     this.getNextPage();
 
     this._state.switchInProgress &#x3D; true;
@@ -998,7 +1024,7 @@ export class InFlight {
   /**
    * Clear ongoing requests if any.
    *
-   * This should be called as part of destructon process. For example onDestroy of a component.
+   * This should be called as part of destruction process. For example onDestroy of a component.
    *
    * @param {boolean} clearData Whether to clear &#x60;results&#x60; as well.
    */
@@ -1008,6 +1034,9 @@ export class InFlight {
     }
 
     this._clearPageSubscription();
+
+    this._state.hasMorePages &#x3D; false;
+    this._triggerStateChange();
   }
 
   /**
@@ -1070,6 +1099,12 @@ export class InFlight {
             this._results.total &#x3D; data.total;
             this._results.page &#x3D; data.page;
             this._results.entities &#x3D; this._results.entities.concat(data.entities);
+          }
+
+          if (data.entities.length &lt; this._perPage || this._results.entities.length &gt;&#x3D; this._results.total) {
+            this._results.total &#x3D; this._results.entities.length;
+            this._state.hasMorePages &#x3D; false;
+            this._triggerStateChange();
           }
 
           this._triggerResultsChange();

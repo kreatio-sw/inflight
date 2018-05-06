@@ -48,6 +48,18 @@
                                 <li class="link">
                                   <a href="../index.html" ><span class="fa fa-file-text-o"></span>README</a>
                                 </li>
+                                <li class="link">
+                                        <a href="../changelog.html"
+                                    >
+                                        <span class="fa fa-file-text-o"></span>CHANGELOG
+                                    </a>
+                                </li>
+                                <li class="link">
+                                        <a href="../license.html"
+                                    >
+                                        <span class="fa fa-file-text-o"></span>LICENSE
+                                    </a>
+                                </li>
                         </ul>
                     </li>
             
@@ -141,6 +153,18 @@
                                        </li>
                                        <li class="link">
                                          <a href="../index.html" ><span class="fa fa-file-text-o"></span>README</a>
+                                       </li>
+                                       <li class="link">
+                                               <a href="../changelog.html"
+                                           >
+                                               <span class="fa fa-file-text-o"></span>CHANGELOG
+                                           </a>
+                                       </li>
+                                       <li class="link">
+                                               <a href="../license.html"
+                                           >
+                                               <span class="fa fa-file-text-o"></span>LICENSE
+                                           </a>
                                        </li>
                                </ul>
                            </li>
@@ -269,6 +293,9 @@
                                         <a href="#errored">errored</a>
                                     </li>
                                     <li>
+                                        <a href="#hasMorePages">hasMorePages</a>
+                                    </li>
+                                    <li>
                                         <a href="#inFlight">inFlight</a>
                                     </li>
                                     <li>
@@ -365,6 +392,45 @@
                                 <td class="col-md-4">
                                     <div class="io-description"><p>Will be set when an error is raised while fetching results.
             It will be reset when making a new request.</p>
+            </div>
+                                </td>
+                            </tr>
+            
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <a name="hasMorePages"></a>
+                                    <span class="name">
+                                        <b>
+                                        hasMorePages
+                                        </b>
+                                        <a href="#hasMorePages"><span class="fa fa-link"></span></a>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>hasMorePages:     <code></code>
+            </code>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value : </i><code>false</code>
+                                    </td>
+                                </tr>
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/inflight/inflight-state.ts:44</a></div>
+                                        </td>
+                                    </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Will be set if there are more pages expected</p>
             </div>
                                 </td>
                             </tr>
@@ -491,6 +557,13 @@
    * @type {boolean}
    */
   switchInProgress &#x3D; false;
+
+  /**
+   * Will be set if there are more pages expected
+   *
+   * @type {boolean}
+   */
+  hasMorePages &#x3D; false;
 }
 </code></pre>
     </div>

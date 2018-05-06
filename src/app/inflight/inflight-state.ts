@@ -38,6 +38,8 @@ export class InFlightState {
 
   /**
    * Will be set if there are more pages expected
+   *
+   * @type {boolean}
    */
   hasMorePages = false;
 }

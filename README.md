@@ -150,8 +150,10 @@ See the following for API details:
       let entities = results.entities;
     });
     
-    // Load additional page
-    inFlight.getNextPage();
+    // Load additional page if there are more pages
+    if(inFlight.state.hasMorePages) {
+      inFlight.getNextPage();
+    }
     
     // To switch the list entirely call start again with new criteria
     inFlight.start(5, true, (page, perPage) => {
