@@ -114,6 +114,8 @@ export class InFlight {
     this._perPage = perPage;
     this._getPageFn = getPageFn;
 
+    this._state.hasMorePages = true;
+
     this.getNextPage();
 
     this._state.switchInProgress = true;
@@ -123,7 +125,7 @@ export class InFlight {
   /**
    * Clear ongoing requests if any.
    *
-   * This should be called as part of destructon process. For example onDestroy of a component.
+   * This should be called as part of destruction process. For example onDestroy of a component.
    *
    * @param {boolean} clearData Whether to clear `results` as well.
    */
@@ -133,6 +135,9 @@ export class InFlight {
     }
 
     this._clearPageSubscription();
+
+    this._state.hasMorePages = false;
+    this._triggerStateChange();
   }
 
   /**
@@ -195,6 +200,12 @@ export class InFlight {
             this._results.total = data.total;
             this._results.page = data.page;
             this._results.entities = this._results.entities.concat(data.entities);
+          }
+
+          if (data.entities.length < this._perPage || this._results.entities.length >= this._results.total) {
+            this._results.total = this._results.entities.length;
+            this._state.hasMorePages = false;
+            this._triggerStateChange();
           }
 
           this._triggerResultsChange();
