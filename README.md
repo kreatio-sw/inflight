@@ -59,6 +59,10 @@ See [InFlightState](classes/InFlightState.html) for more details:
  interaction.
 - [errored](classes/InFlightState.html#errored) - set to true when an error has occurred,
  will be cleared when a subsequent request is made.
+- [hasMorePages](classes/InFlightState.html#hasMorePages) set to true if there are more
+  pages expected. It takes care of few edge cases, see specs for details.
+  One important one is a case when the backend actually returns lesser
+  results than what it initially said it would.
 
 ## Considerations for local updates
 

@@ -424,13 +424,16 @@
                                 </tr>
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/inflight/inflight-state.ts:44</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/inflight/inflight-state.ts:47</a></div>
                                         </td>
                                     </tr>
             
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-description"><p>Will be set if there are more pages expected</p>
+                                    <div class="io-description"><p>Will be set if there are more pages expected. It takes care
+            of few edge cases, see specs for details. One important one is
+            a case when the backend actually returns lesser results than
+            what it initially said it would.</p>
             </div>
                                 </td>
                             </tr>
@@ -559,7 +562,10 @@
   switchInProgress &#x3D; false;
 
   /**
-   * Will be set if there are more pages expected
+   * Will be set if there are more pages expected. It takes care
+   * of few edge cases, see specs for details. One important one is
+   * a case when the backend actually returns lesser results than
+   * what it initially said it would.
    *
    * @type {boolean}
    */

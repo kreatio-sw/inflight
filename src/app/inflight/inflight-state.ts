@@ -37,7 +37,10 @@ export class InFlightState {
   switchInProgress = false;
 
   /**
-   * Will be set if there are more pages expected
+   * Will be set if there are more pages expected. It takes care
+   * of few edge cases, see specs for details. One important one is
+   * a case when the backend actually returns lesser results than
+   * what it initially said it would.
    *
    * @type {boolean}
    */

@@ -290,6 +290,10 @@ is stale or even putting a glass panel to block
 interaction.</li>
 <li><a href="classes/InFlightState.html#errored">errored</a> - set to true when an error has occurred,
 will be cleared when a subsequent request is made.</li>
+<li><a href="classes/InFlightState.html#hasMorePages">hasMorePages</a> set to true if there are more
+pages expected. It takes care of few edge cases, see specs for details.
+One important one is a case when the backend actually returns lesser
+results than what it initially said it would.</li>
 </ul>
 <h2 id="considerations-for-local-updates">Considerations for local updates</h2>
 <p><em>These issues are not specific to this library and not solved by
