@@ -64,6 +64,54 @@ describe('InFlight Basic', () => {
     }, 200);
   });
 
+  it('should get cancel', (done) => {
+    const inFlight = new InFlight();
+
+    inFlight.start(5, true, (page, perPage) => {
+      return genMockData(page, perPage, 23, 'Entity', 50);
+    });
+
+    setTimeout(() => {
+      expect(inFlight.state.dataLoaded).toBe(true);
+      expect(inFlight.state.inFlight).toBe(false);
+
+      inFlight.getNextPage();
+      inFlight.clear(false);
+
+      setTimeout(() => {
+        expect(inFlight.state.dataLoaded).toBe(true);
+        expect(inFlight.state.inFlight).toBe(false);
+        expect(inFlight.state.hasMorePages).toBe(false);
+        expect(inFlight.results.entities.length).toBeGreaterThan(0);
+        done();
+      }, 100);
+    }, 100);
+  });
+
+  it('should get cancel with clear data', (done) => {
+    const inFlight = new InFlight();
+
+    inFlight.start(5, true, (page, perPage) => {
+      return genMockData(page, perPage, 23, 'Entity', 50);
+    });
+
+    setTimeout(() => {
+      expect(inFlight.state.dataLoaded).toBe(true);
+      expect(inFlight.state.inFlight).toBe(false);
+
+      inFlight.getNextPage();
+      inFlight.clear(true);
+
+      setTimeout(() => {
+        expect(inFlight.state.dataLoaded).toBe(false);
+        expect(inFlight.state.inFlight).toBe(false);
+        expect(inFlight.state.hasMorePages).toBe(false);
+        expect(inFlight.results.entities.length).toEqual(0);
+        done();
+      }, 100);
+    }, 100);
+  });
+
   it('should handle empty data', (done) => {
     const inFlight = new InFlight();
 
