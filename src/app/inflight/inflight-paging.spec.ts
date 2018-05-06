@@ -80,12 +80,10 @@ describe('InFlight Pagination', () => {
       // This test works by ensuring that a function was not called during lifetime of the test
       // In this case because the associated Observable was unsubscribed
       // To ensure that the mechanism, please set the timeout for the first request to 0 - the test should fail
-      let iWasCalledNTimes = 0;
+      const spy = jasmine.createSpy('spy');
 
       inFlight.start(5, true, (page, perPage) => {
-        return genMockData(page, perPage, 23, 'Entity', 100).do(() => {
-          iWasCalledNTimes++;
-        });
+        return genMockData(page, perPage, 23, 'Entity', 100).do(spy);
       });
 
       setTimeout(() => {
@@ -107,7 +105,7 @@ describe('InFlight Pagination', () => {
           expect(inFlight.results.entities.length).toBe(5);
 
           // Only one data request should hve been succeeded
-          expect(iWasCalledNTimes).toBe(1);
+          expect(spy.calls.count()).toBe(1);
 
           done();
 
@@ -125,12 +123,10 @@ describe('InFlight Pagination', () => {
       // This test works by ensuring that a function was not called during lifetime of the test
       // In this case because the associated Observable was unsubscribed
       // To ensure that the mechanism, please set the timeout for the first request to 0 - the test should fail
-      let iWasCalledNTimes = 0;
+      const spy = jasmine.createSpy('spy');
 
       inFlight.start(5, true, (page, perPage) => {
-        return genMockData(page, perPage, 23, 'Entity', 100).do(() => {
-          iWasCalledNTimes++;
-        });
+        return genMockData(page, perPage, 23, 'Entity', 100).do(spy);
       });
 
       const subs = inFlight.resultsObservable.subscribe((results) => {
@@ -164,7 +160,7 @@ describe('InFlight Pagination', () => {
               expect(inFlight.results.entities.length).toBe(targetPages * 5);
 
               // Only one data request each for targetPages should hve been succeeded
-              expect(iWasCalledNTimes).toBe(targetPages);
+              expect(spy.calls.count()).toBe(targetPages);
 
               subs.unsubscribe();
               done();
