@@ -3,7 +3,7 @@
 rm -rf docs/
 
 ./node_modules/.bin/compodoc \
-        -p src/tsconfig.app.json \
+        -p tsconfig.app.json \
         -d docs/ \
         --disablePrivate --disableInternal --disableGraph \
         --theme Vagrant --hideGenerator \

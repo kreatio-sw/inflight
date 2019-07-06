@@ -3,235 +3,36 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>@kreatio/inflight documentation</title>
+        <title>inflight documentation</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
-	    <link rel="stylesheet" href="./styles/style.css">
-                 <link rel="stylesheet" href="./styles/Vagrant.css">
+	      <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/Vagrant.css">
     </head>
     <body>
 
         <div class="navbar navbar-default navbar-fixed-top visible-xs">
-            <a href="./" class="navbar-brand">@kreatio/inflight documentation</a>
-            <button type="button" class="btn btn-default btn-menu fa fa-bars" id="btn-menu"></button>
+            <a href="./" class="navbar-brand">inflight documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-            <div id="book-search-input" role="search">
-                <input type="text" placeholder="Type to search">
-            </div>
-            <nav>
-            
-                <ul class="list">
-            
-                    <li class="title">
-                        <a href="./index.html">@kreatio/inflight documentation</a>
-                    </li>
-            
-                    <li class="divider"></li>
-            
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="./index.html"><span class="fa fa-home"></span>Getting started</a>
-                        <ul class="links">
-                                <li class="link">
-                                    <a 
-                                        
-                                         href="./overview.html" 
-                                         href="./overview.html" 
-                                        >
-                                        <span class="fa fa-th"></span>Overview
-                                    </a>
-                                </li>
-                                <li class="link">
-                                  <a href="./index.html"  class="active" ><span class="fa fa-file-text-o"></span>README</a>
-                                </li>
-                                <li class="link">
-                                        <a href="./changelog.html"
-                                    >
-                                        <span class="fa fa-file-text-o"></span>CHANGELOG
-                                    </a>
-                                </li>
-                                <li class="link">
-                                        <a href="./license.html"
-                                    >
-                                        <span class="fa fa-file-text-o"></span>LICENSE
-                                    </a>
-                                </li>
-                        </ul>
-                    </li>
-            
-            
-            
-            
-            
-                    <li class="chapter">
-                        <div class="simple menu-toggler" data-toggle="collapse"
-                                data-target="#xs-classes-links"
-                            >
-                            <span class="fa fa-file-code-o"></span>
-                            <span>Classes</span>
-                            <span class="fa fa-angle-down"></span>
-                        </div>
-                        <ul class="links collapse "
-                                id="xs-classes-links"
-                            >
-                                <li class="link">
-                                    <a href="./classes/InFlight.html" >InFlight</a>
-                                </li>
-                                <li class="link">
-                                    <a href="./classes/InFlightState.html" >InFlightState</a>
-                                </li>
-                                <li class="link">
-                                    <a href="./classes/PagedResults.html" >PagedResults</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-            
-            
-                    <li class="chapter">
-                        <div class="simple menu-toggler" data-toggle="collapse"
-                                data-target="#xs-interfaces-links"
-                            >
-                            <span class="fa fa-info"></span>
-                            <span>Interfaces</span>
-                            <span class="fa fa-angle-down"></span>
-                        </div>
-                        <ul class="links collapse "
-                                id="xs-interfaces-links"
-                            >
-                                <li class="link">
-                                    <a href="./interfaces/GetPageFunc.html" >GetPageFunc</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-            
-            
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="./coverage.html" ><span class="fa fa-tasks"></span>Documentation coverage</a>
-                    </li>
-            
-            
-                </ul>
-            
-            </nav>
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
            <div class="row main">
                <div class="hidden-xs menu">
-                   <nav>
-                   
-                       <ul class="list">
-                   
-                           <li class="title">
-                               <a href="./index.html">@kreatio/inflight documentation</a>
-                           </li>
-                   
-                           <li class="divider"></li>
-                   
-                               <div id="book-search-input" role="search">
-                                   <input type="text" placeholder="Type to search">
-                               </div>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="./index.html"><span class="fa fa-home"></span>Getting started</a>
-                               <ul class="links">
-                                       <li class="link">
-                                           <a 
-                                               
-                                                href="./overview.html" 
-                                                href="./overview.html" 
-                                               >
-                                               <span class="fa fa-th"></span>Overview
-                                           </a>
-                                       </li>
-                                       <li class="link">
-                                         <a href="./index.html"  class="active" ><span class="fa fa-file-text-o"></span>README</a>
-                                       </li>
-                                       <li class="link">
-                                               <a href="./changelog.html"
-                                           >
-                                               <span class="fa fa-file-text-o"></span>CHANGELOG
-                                           </a>
-                                       </li>
-                                       <li class="link">
-                                               <a href="./license.html"
-                                           >
-                                               <span class="fa fa-file-text-o"></span>LICENSE
-                                           </a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                   
-                   
-                   
-                   
-                           <li class="chapter">
-                               <div class="simple menu-toggler" data-toggle="collapse"
-                                       data-target="#classes-links"
-                   >
-                                   <span class="fa fa-file-code-o"></span>
-                                   <span>Classes</span>
-                                   <span class="fa fa-angle-down"></span>
-                               </div>
-                               <ul class="links collapse "
-                                       id="classes-links"
-                   >
-                                       <li class="link">
-                                           <a href="./classes/InFlight.html" >InFlight</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="./classes/InFlightState.html" >InFlightState</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="./classes/PagedResults.html" >PagedResults</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                   
-                   
-                           <li class="chapter">
-                               <div class="simple menu-toggler" data-toggle="collapse"
-                                       data-target="#interfaces-links"
-                   >
-                                   <span class="fa fa-info"></span>
-                                   <span>Interfaces</span>
-                                   <span class="fa fa-angle-down"></span>
-                               </div>
-                               <ul class="links collapse "
-                                       id="interfaces-links"
-                   >
-                                       <li class="link">
-                                           <a href="./interfaces/GetPageFunc.html" >GetPageFunc</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                   
-                   
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="./coverage.html" ><span class="fa fa-tasks"></span>Documentation coverage</a>
-                           </li>
-                   
-                   
-                       </ul>
-                   
-                   </nav>
+                   <compodoc-menu mode="normal"></compodoc-menu>
                </div>
+               <!-- START CONTENT -->
                <div class="content getting-started">
                    <div class="content-data">
 
 <h1 id="in-flight">In Flight</h1>
-<p><em>Please read this documentation at <a href="https://kreatio-sw.github.io/inflight/">https://kreatio-sw.github.io/inflight/</a></em></p>
+<p><em>Please read this documentation at https://kreatio-sw.github.io/inflight/</em></p>
 <h2 id="motivation">Motivation</h2>
 <p>Single Page Applications (SPA) pose unique issues which conventional applications did not face.
 In an SPA, quite often the following situation is faced:</p>
@@ -242,10 +43,12 @@ In an SPA, quite often the following situation is faced:</p>
 </ul>
 <p>A pragmatic approach can be as follows: </p>
 <ul>
-<li>When switching selection criteria, the previous query, which may still be
-in flight, needs to be canceled.</li>
-<li>Even the it could not be canceled it needs to be ensured that stale data
-does not show up in the UI (may happen if not implemented correctly).</li>
+<li><p>When switching selection criteria, the previous query, which may still be
+in flight, needs to be canceled.</p>
+</li>
+<li><p>Even the it could not be canceled it needs to be ensured that stale data
+does not show up in the UI (may happen if not implemented correctly).</p>
+</li>
 <li><p>Regarding entries already displayed, while switching there may be several scenarios:</p>
 <ul>
 <li>clear the current entries as soon a switch is requested.</li>
@@ -334,11 +137,12 @@ the data store.</li>
 </ul>
 <h2 id="install">Install</h2>
 <p>Add npm package to your Angular4/Angular5 project:</p>
-<pre class="line-numbers"><code class="language-bash">$ npm -i &#64;kreatio/inflight
-
-# or
-
-$ yarn add &#64;kreatio/inflight</code></pre><p>All classes are plain typescript classes, so you need not mention or provide any of these
+<p>```bash
+$ npm -i @kreatio/inflight</p>
+<h1 id="or">or</h1>
+<p>$ yarn add @kreatio/inflight
+```</p>
+<p>All classes are plain typescript classes, so you need not mention or provide any of these
 in your project.</p>
 <h2 id="usage">Usage</h2>
 <p>See the following for API details:</p>
@@ -349,44 +153,45 @@ in your project.</p>
 <li><a href="interfaces/GetPageFunc.html">GetPageFunc</a> - function template to fetch actual data</li>
 </ul>
 <h3 id="basic-usage">Basic usage</h3>
-<pre class="line-numbers"><code class="language-typescript">    const inFlight = new InFlight();
+<p>```typescript
+    const inFlight = new InFlight();</p>
+<div><pre class="line-numbers"><code class="language-none">// This will be passed to the function that gets actual data
+const perPage = 25;
 
-    // This will be passed to the function that gets actual data
-    const perPage = 25;
+// If set to true it will clear the data before issuing next
+// request. Setting flase will cause the data to chnage when
+// first page of new request arrives.
+const clearData = true;
 
-    // If set to true it will clear the data before issuing next
-    // request. Setting flase will cause the data to chnage when
-    // first page of new request arrives.
-    const clearData = true;
+inFlight.start(perPage, clearData, (page, perPage) =&gt; {
+  return getAllImages(page, perPage);
+});
 
-    inFlight.start(perPage, clearData, (page, perPage) =&gt; {
-      return getAllImages(page, perPage);
-    });
+inFlight.stateObservable.subscribe((state: InFlightState) =&gt; {
+  // Will yield for every state change
+});
 
-    inFlight.stateObservable.subscribe((state: InFlightState) =&gt; {
-      // Will yield for every state change
-    });
+// You can use state directly as a variable for binding
+let dataInFlight = inFlight.state.inFlight;
+let dataLoaded = inFlight.state.dataLoaded;
 
-    // You can use state directly as a variable for binding
-    let dataInFlight = inFlight.state.inFlight;
-    let dataLoaded = inFlight.state.dataLoaded;
+inFlight.resultsObservable.subscribe((results:PagedResults) =&gt; {
+  // Will yield whenever results change
+  let totalResults = results.total;
+  let currentPage = results.page;
+  let entities = results.entities;
+});
 
-    inFlight.resultsObservable.subscribe((results:PagedResults) =&gt; {
-      // Will yield whenever results change
-      let totalResults = results.total;
-      let currentPage = results.page;
-      let entities = results.entities;
-    });
+// Load additional page if there are more pages
+if(inFlight.state.hasMorePages) {
+  inFlight.getNextPage();
+}
 
-    // Load additional page if there are more pages
-    if(inFlight.state.hasMorePages) {
-      inFlight.getNextPage();
-    }
-
-    // To switch the list entirely call start again with new criteria
-    inFlight.start(5, true, (page, perPage) =&gt; {
-      return getMyImages(page, perPage);
-    });</code></pre><h3 id="implementing-the-data-request-function">Implementing the data request function</h3>
+// To switch the list entirely call start again with new criteria
+inFlight.start(5, true, (page, perPage) =&gt; {
+  return getMyImages(page, perPage);
+});</code></pre></div><p>```</p>
+<h3 id="implementing-the-data-request-function">Implementing the data request function</h3>
 <p>It should return an <code>Observable</code> that should yield a <code>PagedResults</code>.
 Typically it will be a <code>get</code> call on one of the Angular HTTP  classes
 with potential chaining of <code>map</code> calls. The returned Observable should
@@ -405,7 +210,12 @@ actual functionality. Mock Data Generator has test cases of its own which
 are set to skip by default.</p>
 <p>Beware test cases take significant time to run as these need to test delays
 and errors.</p>
-<pre class="line-numbers"><code class="language-none">$ ng test</code></pre>
+<p><code>$ ng test</code></p>
+
+
+
+
+
 
 
 
@@ -421,7 +231,7 @@ and errors.</p>
 
                    </div><div class="search-results">
     <div class="has-results">
-        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
         <ul class="search-results-list"></ul>
     </div>
     <div class="no-results">
@@ -429,8 +239,21 @@ and errors.</p>
     </div>
 </div>
 </div>
+               <!-- END CONTENT -->
            </div>
        </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'getting-started';
+            var COMPODOC_CURRENT_PAGE_URL = 'index.html';
+       </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="./js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="./js/menu-wc.js" defer></script>
 
        <script src="./js/libs/bootstrap-native.js"></script>
 
@@ -441,17 +264,17 @@ and errors.</p>
 
        <script src="./js/compodoc.js"></script>
 
-       <script>var COMPODOC_CURRENT_PAGE_DEPTH = 0;</script>
-
-       <script src="./js/search/search.js"></script>
-       <script src="./js/search/lunr.min.js"></script>
-       <script src="./js/search/search-lunr.js"></script>
-
        <script src="./js/tabs.js"></script>
        <script src="./js/menu.js"></script>
+       <script src="./js/libs/clipboard.min.js"></script>
        <script src="./js/libs/prism.js"></script>
        <script src="./js/sourceCode.js"></script>
-       <script src="./js/search/search_index.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
 
     </body>
 </html>
