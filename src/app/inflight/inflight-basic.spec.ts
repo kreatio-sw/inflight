@@ -3,7 +3,7 @@ import {InFlight} from './inflight';
 import {InFlightState} from './inflight-state';
 import {PagedResults} from '../interfaces/paged-results';
 
-import 'rxjs/add/operator/take';
+import {take} from 'rxjs/operators';
 
 describe('InFlight Basic', () => {
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('InFlight Basic', () => {
     state.inFlight = false;
     state.dataLoaded = false;
 
-    inFlight.stateObservable.take(1).subscribe((st) => {
+    inFlight.stateObservable.pipe(take(1)).subscribe((st) => {
       expect(inFlight.state).toEqual(state);
       expect(st).toEqual(state);
       done();
@@ -33,7 +33,7 @@ describe('InFlight Basic', () => {
     });
 
     setTimeout(() => {
-      inFlight.stateObservable.take(1).subscribe((st) => {
+      inFlight.stateObservable.pipe(take(1)).subscribe((st) => {
         expect(st.dataLoaded).toBe(false);
         expect(st.inFlight).toBe(true);
 
@@ -52,7 +52,7 @@ describe('InFlight Basic', () => {
     });
 
     setTimeout(() => {
-      inFlight.stateObservable.take(1).subscribe((st) => {
+      inFlight.stateObservable.pipe(take(1)).subscribe((st) => {
         expect(st.dataLoaded).toBe(true);
         expect(st.inFlight).toBe(false);
 
@@ -119,13 +119,13 @@ describe('InFlight Basic', () => {
       return genMockData(page, perPage, 0, 'Entity', 100);
     });
 
-    inFlight.stateObservable.take(1).subscribe((st) => {
+    inFlight.stateObservable.pipe(take(1)).subscribe((st) => {
       expect(st.dataLoaded).toBe(false);
       expect(st.inFlight).toBe(true);
     });
 
     setTimeout(() => {
-      inFlight.stateObservable.take(1).subscribe((st) => {
+      inFlight.stateObservable.pipe(take(1)).subscribe((st) => {
         expect(st.dataLoaded).toBe(true);
         expect(st.inFlight).toBe(false);
 

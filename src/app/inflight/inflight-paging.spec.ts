@@ -3,7 +3,7 @@ import {InFlight} from './inflight';
 import {InFlightState} from './inflight-state';
 import {PagedResults} from '../interfaces/paged-results';
 
-import 'rxjs/add/operator/take';
+import {tap} from 'rxjs/operators';
 
 describe('InFlight Pagination', () => {
   beforeEach(() => {
@@ -83,7 +83,7 @@ describe('InFlight Pagination', () => {
       const spy = jasmine.createSpy('spy');
 
       inFlight.start(5, true, (page, perPage) => {
-        return genMockData(page, perPage, 23, 'Entity', 100).do(spy);
+        return genMockData(page, perPage, 23, 'Entity', 100).pipe(tap(spy));
       });
 
       setTimeout(() => {
@@ -126,7 +126,7 @@ describe('InFlight Pagination', () => {
       const spy = jasmine.createSpy('spy');
 
       inFlight.start(5, true, (page, perPage) => {
-        return genMockData(page, perPage, 23, 'Entity', 100).do(spy);
+        return genMockData(page, perPage, 23, 'Entity', 100).pipe(tap(spy));
       });
 
       const subs = inFlight.resultsObservable.subscribe((results) => {

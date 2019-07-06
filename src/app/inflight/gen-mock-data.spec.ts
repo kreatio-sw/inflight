@@ -1,7 +1,6 @@
-import {Observable} from 'rxjs/Observable';
+import {Observable, Observer} from 'rxjs';
 
 import {PagedResults} from '../interfaces/paged-results';
-import {Observer} from 'rxjs/Observer';
 
 
 export function genMockData(page: number, perPage: number, totalResults: number,

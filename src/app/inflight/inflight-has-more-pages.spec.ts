@@ -3,8 +3,7 @@ import {InFlight} from './inflight';
 import {InFlightState} from './inflight-state';
 import {PagedResults} from '../interfaces/paged-results';
 
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/map';
+import {map} from 'rxjs/operators';
 
 describe('InFlight hasMorePages', () => {
   beforeEach(() => {
@@ -75,10 +74,10 @@ describe('InFlight hasMorePages', () => {
     inFlight.start(5, true, (page, perPage) => {
       // Simulate a backend that returns incorrect (inflated) count of results
       // The following will say 11 items while actually return only 9
-      return genMockData(page, perPage, 9, 'Entity', 5).map((results) => {
+      return genMockData(page, perPage, 9, 'Entity', 5).pipe(map((results) => {
         results.total = results.total + 2;
         return results;
-      });
+      }));
     });
 
     setTimeout(() => {

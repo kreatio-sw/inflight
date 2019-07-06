@@ -1,4 +1,5 @@
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
+
 import {PagedResults} from '../interfaces/paged-results';
 
 /**

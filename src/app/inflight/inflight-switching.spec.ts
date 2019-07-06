@@ -3,8 +3,8 @@ import {InFlight} from './inflight';
 import {InFlightState} from './inflight-state';
 import {PagedResults} from '../interfaces/paged-results';
 
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/do';
+import {tap} from 'rxjs/operators';
+
 
 describe('InFlight Switching', () => {
   beforeEach(() => {
@@ -138,10 +138,10 @@ describe('InFlight Switching', () => {
 
     // Set a longer time, so that it arrives later
     inFlight.start(25, true, (page, perPage) => {
-      return genMockData(page, perPage, 48, 'Entity A', 1000).do((results) => {
+      return genMockData(page, perPage, 48, 'Entity A', 1000).pipe(tap((results) => {
         // This should not have been called
         iWasCalled = true;
-      });
+      }));
     });
 
     expect(inFlight.state.switchInProgress).toBe(true);

@@ -1,6 +1,4 @@
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
+import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 
 import {InFlightState} from './inflight-state';
 import {PagedResults} from '../interfaces/paged-results';

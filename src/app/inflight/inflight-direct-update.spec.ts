@@ -3,8 +3,7 @@ import {InFlight} from './inflight';
 import {InFlightState} from './inflight-state';
 import {PagedResults} from '../interfaces/paged-results';
 
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/skip';
+import {skip, take} from 'rxjs/operators';
 
 describe('InFlight Direct Update', () => {
   beforeEach(() => {
@@ -42,7 +41,7 @@ describe('InFlight Direct Update', () => {
     setTimeout(() => {
       const newName = 'New Name';
 
-      inFlight.resultsObservable.skip(1).take(1).subscribe((res) => {
+      inFlight.resultsObservable.pipe(skip(1), take(1)).subscribe((res) => {
         expect(res.entities[0].name).toEqual(newName);
 
         done();
