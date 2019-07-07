@@ -17,9 +17,6 @@ export interface GetPageFunc {
    * This will typically be Angular HTTP `get` call, followed by `map`.
    * To add timeout and retry, use standard RxJS techniques at this stage.
    *
-   * @param {number} page
-   * @param {number} perPage
-   * @returns {Observable<PagedResults>}
    */
   (page: number, perPage: number): Observable<PagedResults>;
 }

@@ -20,10 +20,6 @@ export class PagedResults {
 
   /**
    * Create new instance
-   *
-   * @param {number} total
-   * @param {number} page
-   * @param {any[]} entities
    */
   constructor(total: number = null, page: number = null, entities: any[] = []) {
     this.total = total;

@@ -52,8 +52,6 @@ export class InFlight {
 
   /**
    * Current value of results, it same as yielded by [resultsObservable]{@link InFlight#resultsObservable}
-   *
-   * @returns {PagedResults}
    */
   get results(): PagedResults {
     return this.resultsObservable.getValue();
@@ -69,8 +67,6 @@ export class InFlight {
    *
    * You must understand that the results may get inconsistent when the loaded entities
    * are updated using this call and subsequent pages are loaded from external service.
-   *
-   * @param {PagedResults} value
    */
   set results(value: PagedResults) {
     this._results = value;
@@ -79,8 +75,6 @@ export class InFlight {
 
   /**
    * Current state, it same as yielded by [stateObservable]{@link InFlight#stateObservable}
-   *
-   * @returns {InFlightState}
    */
   get state(): InFlightState {
     return this.stateObservable.getValue();
@@ -97,10 +91,10 @@ export class InFlight {
    * If requests are in flight when a switch is initiated, the pending request will be cancelled.
    * It is ensured that stale data will not show up.
    *
-   * @param {number} perPage Number of entities per page
-   * @param {boolean} clearData Whether to clear the results now,
+   * @param perPage Number of entities per page
+   * @param clearData Whether to clear the results now,
    * if `false` current set of results will be retained till response is received
-   * @param {GetPageFunc} getPageFn See description for details
+   * @param getPageFn See description for details
    */
   public start(perPage: number, clearData: boolean, getPageFn: GetPageFunc) {
 
@@ -125,7 +119,7 @@ export class InFlight {
    *
    * This should be called as part of destruction process. For example onDestroy of a component.
    *
-   * @param {boolean} clearData Whether to clear `results` as well.
+   * @param clearData Whether to clear `results` as well.
    */
   public clear(clearData: boolean) {
     if (clearData) {
