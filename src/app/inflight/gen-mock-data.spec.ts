@@ -6,7 +6,7 @@ import {PagedResults} from '../interfaces/paged-results';
 export function genMockData(page: number, perPage: number, totalResults: number,
                             prefix: string, delay: number,
                             errFn = () => false): Observable<PagedResults> {
-  return Observable.create(
+  return new Observable(
     (obs: Observer<PagedResults>) => {
       const timerHandle = setTimeout(() => {
         if (errFn()) {
