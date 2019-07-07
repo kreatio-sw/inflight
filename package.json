@@ -1,6 +1,7 @@
 {
-  "name": "inflight",
-  "version": "0.0.0",
+  "name": "@kreatio/inflight",
+  "version": "0.1.2",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "test": "ng test",
@@ -9,8 +10,7 @@
     "lint": "ng lint"
   },
   "private": false,
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.801.0",
     "@angular/animations": "~8.1.0",
