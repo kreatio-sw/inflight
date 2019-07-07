@@ -5,11 +5,11 @@ import {PagedResults} from '../interfaces/paged-results';
 
 export function genMockData(page: number, perPage: number, totalResults: number,
                             prefix: string, delay: number,
-                            err_fn = () => false): Observable<PagedResults> {
+                            errFn = () => false): Observable<PagedResults> {
   return Observable.create(
     (obs: Observer<PagedResults>) => {
       const timerHandle = setTimeout(() => {
-        if (err_fn()) {
+        if (errFn()) {
           obs.error(new Error('Unable to connect'));
         } else {
           const entities = [];
